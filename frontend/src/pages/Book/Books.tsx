@@ -117,10 +117,12 @@ const Books = () => {
 
   return (
     <div className="p-6 space-y-10 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+
+        {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-6">
-            <FaBookOpen className="text-[#0079C0]" /> Library Management
+            <FaBookOpen className="text-[#0079C0]" /> Book Management
           </h2>
           <p className="text-gray-600 dark:text-gray-300 ps-12">
             Manage your library collection
@@ -138,12 +140,12 @@ const Books = () => {
       <div className="flex flex-col md:flex-row gap-4">
         <div className="relative flex-grow">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <FaSearch className="text-gray-400" />
+            <FaSearch className="text-[#0079C0]" />
           </div>
           <input
             type="text"
             placeholder="Search by title, author or ISBN..."
-            className="pl-10 pr-4 py-2 w-1/2 border border-[#0079C0] dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            className="pl-10 pr-4 py-2 w-1/2 border border-[#0079C0] dark:border-gray-600 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-500 dark:bg-gray-700 dark:text-white"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -151,7 +153,7 @@ const Books = () => {
 
         <div className="relative w-full md:w-48">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <FaFilter className="text-gray-400" />
+            <FaFilter className="text-[#0079C0]" />
           </div>
           <select
             className="pl-10 pr-4 py-2 w-full border  border-[#0079C0] dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white appearance-none"
@@ -207,19 +209,19 @@ const Books = () => {
                   key={book.id}
                   className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  <td className="py-3 px-6 text-gray-800 dark:text-white font-medium">
+                  <td className="py-4 px-6 text-gray-800 dark:text-white ">
                     {book.title}
                   </td>
-                  <td className="py-3 px-6 text-gray-600 dark:text-gray-400">
+                  <td className="py-4 px-6 text-gray-600 dark:text-gray-400">
                     {book.author}
                   </td>
-                  <td className="py-3 px-6 text-gray-600 dark:text-gray-400">
+                  <td className="py-4 px-6 text-gray-600 dark:text-gray-400">
                     {book.category}
                   </td>
-                  <td className="py-3 px-6 text-gray-600 dark:text-gray-400 font-mono">
+                  <td className="py-4 px-6 text-gray-600 dark:text-gray-400 font-mono">
                     {book.isbn}
                   </td>
-                  <td className="py-3 px-6">
+                  <td className="py-4 px-6">
                     <span
                       className={`px-2 py-1 text-xs rounded-full ${
                         book.status === "Available"
@@ -238,10 +240,10 @@ const Books = () => {
                     {book.borrower || "-"}
                   </td>
 
-                  <td className="py-3 px-6 text-gray-600 dark:text-gray-400">
+                  <td className="py-4 px-6 text-gray-600 dark:text-gray-400">
                     {book.availability || "-"}
                   </td>
-                  <td className="py-3 px-6 flex gap-2">
+                  <td className="py-4 px-6 flex gap-2">
                     <button
                       onClick={() => handleViewBook(book.id)}
                       className="p-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 rounded-full hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors"
@@ -269,9 +271,8 @@ const Books = () => {
             ) : (
               <tr>
                 <td
-                  colSpan={8}
-                  className="py-6 text-center text-gray-500 dark:text-gray-400"
-                >
+                  colSpan={12}
+                  className="py-20 text-center text-red-700 dark:text-gray-400"                >
                   No books found matching your criteria
                 </td>
               </tr>

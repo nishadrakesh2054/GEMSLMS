@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { IoBookSharp } from "react-icons/io5";
 import { FaUsers } from "react-icons/fa6";
-import { CiSettings } from "react-icons/ci";
 import { TbReportSearch } from "react-icons/tb";
 import { FiLock, FiRepeat } from "react-icons/fi";
 
@@ -45,16 +44,7 @@ const navItems: NavItem[] = [
     path: "/reports",
   },
 
-  {
-    name: "Settings",
-    icon: <CiSettings />,
-    subItems: [
-      { name: "404 Error", path: "/error-404", pro: false },
-      { name: "Calender", path: "/calendar", pro: false },
-      { name: "Basic-Table", path: "/basic-tables", pro: false },
-      { name: "Form Elements", path: "/form-elements", pro: false },
-    ],
-  },
+
 ];
 
 const othersItems: NavItem[] = [
@@ -65,6 +55,8 @@ const othersItems: NavItem[] = [
       { name: "Log In", path: "/signin", pro: false },
       { name: "Register", path: "/signup", pro: false },
       { name: "Profile", path: "/profile", pro: false },
+      { name: "Form Elements", path: "/form-elements", pro: false },
+
     ],
   },
 ];
