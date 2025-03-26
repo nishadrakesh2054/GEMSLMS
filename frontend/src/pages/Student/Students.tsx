@@ -10,6 +10,7 @@ import {
 import { FaEye } from "react-icons/fa6";
 import { FiClock, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { MdGrade } from "react-icons/md";
+import { useNavigate } from "react-router";
 
 type Student = {
   id: number;
@@ -23,6 +24,7 @@ type Student = {
 };
 
 const StudentsPage = () => {
+  const navigate = useNavigate();
   const [students, setStudents] = useState<Student[]>([
     {
       id: 1,
@@ -100,7 +102,10 @@ const StudentsPage = () => {
             Manage all student records in the library system
           </p>
         </div>
-        <button className="flex items-center text-white bg-[#0079C0] hover:bg-yellow-700 px-4 py-2 rounded-md transition-colors duration-200">
+        <button
+          className="flex items-center text-white bg-[#0079C0] hover:bg-yellow-700 px-4 py-2 rounded-md transition-colors duration-200"
+          onClick={() => navigate("/student")}
+        >
           <FaPlusCircle className="mr-2" /> Add New Student
         </button>
       </div>
@@ -184,9 +189,15 @@ const StudentsPage = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="py-4 px-6  dark:text-white text-gray-600 ">{student.email}</td>
-                  <td className="py-4 px-6 dark:text-white text-gray-600">{student.phone}</td>
-                  <td className="py-4 px-6 dark:text-white text-gray-600 ">{student.grade}</td>
+                  <td className="py-4 px-6  dark:text-white text-gray-600 ">
+                    {student.email}
+                  </td>
+                  <td className="py-4 px-6 dark:text-white text-gray-600">
+                    {student.phone}
+                  </td>
+                  <td className="py-4 px-6 dark:text-white text-gray-600 ">
+                    {student.grade}
+                  </td>
                   <td className="py-4 px-6 dark:text-white text-gray-600">
                     {student.rollNo}
                   </td>
@@ -205,12 +216,14 @@ const StudentsPage = () => {
 
                   <td className="py-3 px-6 flex gap-2">
                     <button
+                      onClick={() => navigate("/viewstudent")}
                       className="p-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 rounded-full hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors"
                       title="View Details"
                     >
                       <FaEye />
                     </button>
                     <button
+                      onClick={() => navigate("/editstudent")}
                       className="p-2 text-yellow-600 hover:text-yellow-800 dark:text-yellow-400 dark:hover:text-yellow-300 rounded-full hover:bg-yellow-50 dark:hover:bg-gray-600 transition-colors"
                       title="Edit"
                     >

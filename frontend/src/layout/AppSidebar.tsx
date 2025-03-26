@@ -54,8 +54,6 @@ const othersItems: NavItem[] = [
     subItems: [
       { name: "Log In", path: "/signin", pro: false },
       { name: "Register", path: "/signup", pro: false },
-      { name: "Profile", path: "/profile", pro: false },
-      { name: "Form Elements", path: "/form-elements", pro: false },
 
     ],
   },
@@ -267,13 +265,7 @@ const AppSidebar: React.FC = () => {
         <Link to="/">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
-              {/* <img
-                className="dark:hidden  border"
-                src="/images/logo/logo.svg"
-                alt="Logo"
-                width={150}
-                height={40}  
-              /> */}
+             
               <div className="flex items-center gap-3 ">
                 <img
                   className="   object-contain transition-transform duration-300 hover:scale-105"
@@ -288,7 +280,7 @@ const AppSidebar: React.FC = () => {
             </>
           ) : (
             <img
-              src="/images/logo/logo-icon.svg"
+              src="/lmslogo.png"
               alt="Logo"
               width={32}
               height={32}
