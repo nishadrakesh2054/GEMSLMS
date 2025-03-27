@@ -1,3 +1,4 @@
+
 import {
   FaPlusCircle,
   FaEdit,
@@ -7,102 +8,62 @@ import {
 } from "react-icons/fa";
 import { FaEye, FaBookOpen } from "react-icons/fa6";
 import { useState } from "react";
+import { useNavigate } from "react-router";
+import { useGetBooksQuery, useDeleteBookMutation } from "../../service/book";
+import { Book } from "../../types/book";
 
 const Books = () => {
+  const { data: apiResponse, error, isLoading, refetch } = useGetBooksQuery();
+  const [deleteBook] = useDeleteBookMutation();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
 
-  const books = [
-    {
-      id: 1,
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      isbn: "978-3-16-148410-0",
-      category: "Classic Literature",
-      publishedYear: 1925,
-      publisher: "Scribner",
-      pages: 180,
-      status: "Available",
+  // Transform API data to match your table structure
+  const transformBookData = (apiBook: Book) => {
+    return {
+      id: apiBook.id,
+      title: apiBook.title,
+      author: apiBook.subtitle?.join(", ") || "Unknown", 
+      isbn: apiBook.isbnNo,
+      accessionNumber: apiBook.accessionNumber,
+      noOfCopies: apiBook.noOfCopies,
+      status: apiBook.availabilities?.[0] || "Available",
       dueDate: "",
-      borrower: "",
-      availability: "2/3",
-    },
-    {
-      id: 2,
-      title: "1984",
-      author: "George Orwell",
-      isbn: "978-0-452-28423-4",
-      category: "Dystopian",
-      publishedYear: 1949,
-      publisher: "Secker & Warburg",
-      pages: 328,
-      status: "Checked Out",
-      dueDate: "2023-06-15",
-      borrower: "John Smith",
-      availability: "1/5",
-    },
-    {
-      id: 3,
-      title: "To Kill a Mockingbird",
-      author: "Harper Lee",
-      isbn: "978-0-06-112008-4",
-      category: "Southern Gothic",
-      publishedYear: 1960,
-      publisher: "J. B. Lippincott & Co.",
-      pages: 281,
-      status: "Available",
-      dueDate: "",
-      borrower: "",
-      availability: "4/6",
-    },
-    {
-      id: 4,
-      title: "Moby Dick",
-      author: "Herman Melville",
-      isbn: "978-1-59308-018-7",
-      category: "Adventure",
-      publishedYear: 1851,
-      publisher: "Harper & Brothers",
-      pages: 635,
-      status: "Available",
-      dueDate: "",
-      borrower: "",
-      availability: "3/9",
-    },
-    {
-      id: 5,
-      title: "The Lean Startup",
-      author: "Eric Ries",
-      isbn: "978-0-307-88789-4",
-      category: "Business",
-      publishedYear: 2011,
-      publisher: "Crown Business",
-      pages: 336,
-      status: "Reserved",
-      dueDate: "",
-      borrower: "Sarah Johnson",
-      availability: "6/8",
-    },
-  ];
+      barCodes: apiBook.barCodes,
+    };
+  };
+
+
+
+  const apiBooks = apiResponse?.data?.books || [];
+  const books = apiBooks.map(transformBookData);
 
   const handleAddBook = () => {
-    console.log("Adding a new book");
-    // Would typically open a modal or navigate to a form
+    navigate("/addbook");
   };
 
   const handleEditBook = (id: number) => {
     console.log(`Editing book with ID: ${id}`);
+    navigate(`/editbook/${id}`);
     // Would typically open a modal or navigate to a form
   };
 
   const handleViewBook = (id: number) => {
     console.log(`Viewing book with ID: ${id}`);
+    navigate(`/viewbook/${id}`);
     // Would typically open a modal or navigate to a detail page
   };
 
-  const handleDeleteBook = (id: number) => {
-    console.log(`Deleting book with ID: ${id}`);
-    // Would typically show a confirmation dialog before deleting
+  const handleDeleteBook = async (id: number) => {
+    if (window.confirm("Are you sure you want to delete this book?")) {
+      try {
+        await deleteBook(id).unwrap();
+        refetch(); // Refresh the book list after deletion
+      } catch (err) {
+        console.error("Failed to delete book:", err);
+      }
+    }
   };
 
   const filteredBooks = books.filter((book) => {
@@ -115,10 +76,15 @@ const Books = () => {
     return matchesSearch && matchesFilter;
   });
 
+  if (isLoading) return <div className="p-6 text-center">Loading...</div>;
+  if (error)
+    return (
+      <div className="p-6 text-center text-red-500">Error loading books</div>
+    );
+
   return (
     <div className="p-6 space-y-10 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-
-        {/* Header */}
+      {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-6">
@@ -169,8 +135,6 @@ const Books = () => {
         </div>
       </div>
 
- 
-
       {/* Table displaying books */}
       <div className="overflow-x-auto mt-6 shadow-sm rounded-lg border border-gray-200 dark:border-gray-700">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -180,46 +144,57 @@ const Books = () => {
                 Title
               </th>
               <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Author
+                Sub Title
               </th>
               <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Category
+                accessionNumber
               </th>
               <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 ISBN
               </th>
+
+              <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                noOfCopies
+              </th>
+
+              <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                barCodes
+              </th>
               <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 Status
               </th>
-              <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                Borrower
-              </th>
-              <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-               Availability
-              </th>
+
               <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 text-[15px]  capitalize">
             {filteredBooks.length > 0 ? (
               filteredBooks.map((book) => (
                 <tr
                   key={book.id}
                   className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  <td className="py-4 px-6 text-gray-800 dark:text-white ">
+                  <td className="py-4 px-6 text-gray-800 dark:text-white  ">
                     {book.title}
                   </td>
                   <td className="py-4 px-6 text-gray-600 dark:text-gray-400">
                     {book.author}
                   </td>
                   <td className="py-4 px-6 text-gray-600 dark:text-gray-400">
-                    {book.category}
+                    {book.accessionNumber}
                   </td>
                   <td className="py-4 px-6 text-gray-600 dark:text-gray-400 font-mono">
                     {book.isbn}
+                  </td>
+
+                  <td className="py-4 px-6 text-gray-600 dark:text-gray-400 font-mono">
+                    {book.noOfCopies}
+                  </td>
+
+                  <td className="py-3 px-6 text-gray-600 dark:text-gray-400">
+                    {book.barCodes}
                   </td>
                   <td className="py-4 px-6">
                     <span
@@ -236,13 +211,7 @@ const Books = () => {
                       {book.status}
                     </span>
                   </td>
-                  <td className="py-3 px-6 text-gray-600 dark:text-gray-400">
-                    {book.borrower || "-"}
-                  </td>
 
-                  <td className="py-4 px-6 text-gray-600 dark:text-gray-400">
-                    {book.availability || "-"}
-                  </td>
                   <td className="py-4 px-6 flex gap-2">
                     <button
                       onClick={() => handleViewBook(book.id)}
@@ -272,7 +241,8 @@ const Books = () => {
               <tr>
                 <td
                   colSpan={12}
-                  className="py-20 text-center text-red-700 dark:text-gray-400"                >
+                  className="py-20 text-center text-red-700 dark:text-gray-400"
+                >
                   No books found matching your criteria
                 </td>
               </tr>

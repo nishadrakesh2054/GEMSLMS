@@ -12,6 +12,9 @@ import Reports from "./pages/Analytics/Reports";
 import AddStudent from "./pages/Student/AddStudent";
 import EditStudent from "./pages/Student/EditStudent";
 import ViewStudent from "./pages/Student/ViewStudent";
+import AddBook from "./pages/Book/AddBook";
+import EditBook from "./pages/Book/EditBook";
+import ViewBook from "./pages/Book/ViewBook";
 
 export default function App() {
   return (
@@ -22,15 +25,21 @@ export default function App() {
           {/* Dashboard Layout */}
           <Route element={<AppLayout />}>
             <Route index path="/" element={<Home />} />
+
             <Route path="/books" element={<Books />} />
+            <Route path="/addbook" element={<AddBook />} />
+            <Route path="/editbook/:id" element={<EditBook />} />
+            <Route path="/viewbook/:id" element={<ViewBook />} />
+
+            {/* Students  Page start */}
             <Route path="/students" element={<Students />} />
             <Route path="/student" element={<AddStudent />} />
             <Route path="/editstudent" element={<EditStudent />} />
             <Route path="/viewstudent" element={<ViewStudent />} />
+            {/* Students  Page  end */}
+
             <Route path="/circulations" element={<Circulation />} />
             <Route path="/reports" element={<Reports />} />
-
-          
           </Route>
 
           {/* Auth Layout */}
